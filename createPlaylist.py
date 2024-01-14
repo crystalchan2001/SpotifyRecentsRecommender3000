@@ -12,9 +12,11 @@ def main():
     print("Welcome to the Spotify Recents Recommender 3000!")
     spotify_brain = SpotifyBrain()
     # getting the last played tracks
-    invalid_limit = True
+    num_tracks_to_visualise = int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "))
+
+    invalid_limit = (num_tracks_to_visualise <= 0 or num_tracks_to_visualise > 50)
     while invalid_limit:
-        num_tracks_to_visualise = int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "))
+        num_tracks_to_visualise = int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 50: "))
         if (num_tracks_to_visualise > 0 and num_tracks_to_visualise <= 50):
             invalid_limit = False
 
@@ -25,19 +27,23 @@ def main():
         print(f"{index} -  {track}")
     
     # choosing which tracks to use as a seed to generate a playlist
-    invalid_seeds = True
+    indexes = input("Enter the tracks you want to use as seeds by track id separated by a space (Enter between 1 and 5 indexes): ")
+    indexes_list = indexes.split()
+    num_seeds = len(indexes_list)
+
+    invalid_seeds = (num_seeds <= 0 or num_seeds > 5)
     while invalid_seeds:
-        indexes = input("Enter the tracks you want to use as seeds by track id separated by a space (Enter between 1 and 5 tracks): ")
-        indexes_list = indexes.split()
-        if (len(indexes_list) > 0 and len(indexes_list) <= 5):
-            print(len(indexes))
-            seed_tracks = [last_played_tracks[int(index)-1] for index in indexes_list]
+        num_seeds = int(input("You have entered an invalid number of indexes! Please enter between 1 and 5 indexes to be used as seeds."))
+        if (num_seeds > 0 and num_seeds <= 5):
             invalid_seeds = False
 
+    seed_tracks = [last_played_tracks[int(index)-1] for index in indexes_list]
+
     # choosing how many tracks they want recommended in the new playlist
-    invalid_limit = True
+    limit = int(input("How many tracks would you like recommended in your new playlist? (Between 1 and 100):"))
+    invalid_limit = (limit < 1 or limit > 100)
     while invalid_limit:
-        limit = int(input("How many tracks would you like recommended in your new playlist? (Between 1 and 100):"))
+        limit = int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 100: "))
         if (limit >= 1 and limit <= 100):
             invalid_limit = False
 
