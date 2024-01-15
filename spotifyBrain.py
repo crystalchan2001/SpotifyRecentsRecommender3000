@@ -10,7 +10,7 @@ authorization_url = "https://accounts.spotify.com/authorize"
 redirect_uri = "http://localhost/"
 token_url = "https://accounts.spotify.com/api/token"
 
-scope = "playlist-modify-public playlist-modify-private user-read-recently-played user-read-private user-read-email"
+scope = "playlist-modify-public playlist-modify-private playlist-read-private user-read-recently-played user-read-private user-read-email"
 
 class SpotifyBrain:
     """SpotifyClient performs operations using the Spotify API"""
