@@ -7,16 +7,36 @@ from spotifyBrain import SpotifyBrain
 # 4. Ask the user to choose a playlist name
 # 5. Create the playlist and populate with the recommended tracks
 
+def check_valid_int(to_check):
+    invalid = True
+    while invalid:
+        try:
+            int(to_check)
+        except:
+            to_check = input("Please enter numbers only!: ")
+        else:
+            return int(to_check)
+        
+def check_valid_int_list(to_check):
+    invalid = True
+    while invalid:
+        try:
+            [eval(i) for i in to_check.strip().split()]
+        except:
+            to_check = input("Please only enter numbers separated by a space: ")
+        else:
+            return [eval(i) for i in to_check.strip().split()]
+
 def main():
     print("Welcome to the Spotify Recents Recommender 3000!")
     spotify_brain = SpotifyBrain()
 
-    num_tracks_to_visualise = int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "))
+    num_tracks_to_visualise = check_valid_int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "))
 
     # check the input is valid
     invalid_limit = (num_tracks_to_visualise <= 0 or num_tracks_to_visualise > 50)
     while invalid_limit:
-        num_tracks_to_visualise = int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 50: "))
+        num_tracks_to_visualise = check_valid_int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 50: "))
         if (num_tracks_to_visualise > 0 and num_tracks_to_visualise <= 50):
             invalid_limit = False
 
@@ -32,26 +52,20 @@ def main():
     # check inputted seeds are valid
     invalid_seeds = True
     while invalid_seeds:
-        try:
-            indexes_list = [eval(i) for i in indexes.strip().split()]
-        except:
-            indexes = input("Please only enter indexes separated by a space: ")
-            continue
+        indexes_list = check_valid_int_list(indexes)
 
         num_seeds = len(indexes_list)
         print(num_seeds, f"[{indexes_list}]")
 
-        #* ERROR CHECK FOR invalid index value 
         invalid_num_seeds = (num_seeds <= 0 or num_seeds > 5)
         invalid_seed_value = not all((idx > 0 and idx <= len(last_played_tracks)) for idx in indexes_list) 
-        print(f"invalid_num_seeds = {invalid_num_seeds}. invalid_seed_value = {invalid_seed_value}. len(last_played_tracks) = {len(last_played_tracks)}")
 
         if (invalid_num_seeds):
             indexes = input("You have entered an invalid number of indexes! Please enter between 1 and 5 indexes to be used as seeds: ")
             continue 
 
         elif (invalid_seed_value):
-            indexes = input("You have entered an invalid track index! Please enter indexes from the list of tracks above: ")
+            indexes = input(f"You have entered an invalid index! Please enter indexes between 1 and {num_tracks_to_visualise} (inclusive) from the list above: ")
             continue
         
         elif (not invalid_num_seeds and not invalid_seed_value):
@@ -60,12 +74,12 @@ def main():
     seed_tracks = [last_played_tracks[int(index)-1] for index in indexes_list]
 
     # choosing how many tracks they want recommended in the new playlist
-    limit = int(input("How many tracks would you like recommended in your new playlist? (Between 1 and 100):"))
+    limit = check_valid_int(input("How many tracks would you like recommended in your new playlist? (Between 1 and 100):"))
 
     # check the input is valid
     invalid_limit = (limit < 1 or limit > 100)
     while invalid_limit:
-        limit = int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 100: "))
+        limit = check_valid_int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 100: "))
         if (limit >= 1 and limit <= 100):
             invalid_limit = False
 
