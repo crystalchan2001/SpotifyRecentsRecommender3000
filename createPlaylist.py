@@ -26,6 +26,21 @@ def check_valid_int_list(to_check):
             to_check = input("Please only enter numbers separated by a space: ")
         else:
             return [eval(i) for i in to_check.strip().split()]
+        
+# def check_in_range(to_check, lowBound, upBound):
+#     invalid_range = to_check in range(lowBound, upBound+1)
+#     while invalid_range:
+#         to_check = check_valid_int(input(f"You have entered an invalid number! Please choose a number between {lowBound} and {upBound}: "))
+        
+def check_playlist_preference(to_check):
+    invalid = True
+    while invalid:
+        if to_check.lower() == "new":
+            return True
+        elif to_check.lower() == "existing":
+            return False
+        else:
+            to_check = input("Please enter either 'new' or 'existing': ")
 
 def main():
     print("Welcome to the Spotify Recents Recommender 3000!")
@@ -34,6 +49,8 @@ def main():
     num_tracks_to_visualise = check_valid_int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "))
 
     # check the input is valid
+    # check_in_range(num_tracks_to_visualise, 1, 50)
+
     invalid_limit = (num_tracks_to_visualise <= 0 or num_tracks_to_visualise > 50)
     while invalid_limit:
         num_tracks_to_visualise = check_valid_int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 50: "))
@@ -74,28 +91,43 @@ def main():
     seed_tracks = [last_played_tracks[int(index)-1] for index in indexes_list]
 
     # choosing how many tracks they want recommended in the new playlist
-    limit = check_valid_int(input("How many tracks would you like recommended in your new playlist? (Between 1 and 100):"))
+    limit = check_valid_int(input("How many tracks would you like recommended? (Between 1 and 100): "))
 
     # check the input is valid
     invalid_limit = (limit < 1 or limit > 100)
     while invalid_limit:
         limit = check_valid_int(input("You have entered an invalid number of tracks! Please enter a number between 1 and 100: "))
-        if (limit >= 1 and limit <= 100):
-            invalid_limit = False
+        invalid_limit = not (limit in range(1, 101))
 
     # get recommended based off seed tracks
     recommended_tracks = spotify_brain.get_track_recommendations(seed_tracks, limit)
 
-    print("Here are the recommended tracks that will be included in your new playlist: ")
+    print("Here are the recommended tracks: ")
     for index, track in enumerate(recommended_tracks, start=1):
         print(f"{index} -  {track}")
 
-    playlist_name = input("Playlist name: ")
-    playlist = spotify_brain.create_playlist(playlist_name)
-    print(f"{playlist_name} was created successfully.")
+    new_playlist = check_playlist_preference(input("Would you like to add recommended tracks to a new or existing playlist? (new/existing): "))
+
+    if new_playlist:
+        playlist_name = input("Playlist name: ")
+        playlist = spotify_brain.create_playlist(playlist_name)
+        print(f"{playlist_name} was created successfully.")
+    
+    else:
+        playlists = spotify_brain.get_existing_playlists()
+        print(f"Here are up to 50 of your Playlists: ")
+        for index, pl in enumerate(playlists, start=1):
+            print(f"{index} -  {pl.name}")
+        playlist_idx = check_valid_int(input("Please enter the index of the playlist you wish to add the recommended tracks to: "))
+        invalid_idx = not (playlist_idx in range(1, len(playlists)+1))
+        while invalid_idx:
+            playlist_idx = check_valid_int(input("Please enter a valid index from the list above: " ))
+            invalid_idx = not (playlist_idx in range(1, len(playlists)+1))
+
+        playlist = playlists[int(playlist_idx)-1]
 
     spotify_brain.populate_playlist(playlist, recommended_tracks)
-    print(f"{limit} recommended tracks successfully uploaded to {playlist_name}.")
+    print(f"{limit} recommended tracks successfully uploaded to {playlist.name}.")
     
 
 main()
