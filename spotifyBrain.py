@@ -90,11 +90,6 @@ class SpotifyBrain:
             return tracks
     
     def get_track_recommendations(self, seed_tracks, limit):
-        """Get a list of recommended tracks starting from a number of seed tracks.
-        :param seed_tracks (list of Track): Should be five or less
-        :param limit (int): Number of recommended to be returned
-        :param tracks (list of Track): Recommended tracks list
-        """
         seed_tracks_url = ""
         for seed_track in seed_tracks:
             seed_tracks_url += seed_track.id + ","
@@ -109,7 +104,18 @@ class SpotifyBrain:
             tracks = [Track(track["name"], track["id"], track["artists"][0]["name"], track["album"]["name"]) for track
                         in response["tracks"]]
             return tracks
-
+        
+    def get_existing_playlists(self):
+        url = f"https://api.spotify.com/v1/users/{self.user_id}/playlists?limit=50"
+        response = self._place_get_api_request(url).json()
+        try:
+            response["items"]
+        except:
+            response["error"]
+        else:
+            playlists = [Playlist(playlist["name"], playlist["id"]) for playlist in response["items"]]
+            return playlists
+        
     def create_playlist(self, name):
         data = json.dumps({
             "name": name,
