@@ -127,7 +127,7 @@ def main():
         playlist = playlists[int(playlist_idx)-1]
 
     spotify_brain.populate_playlist(playlist, recommended_tracks)
-    print(f"{limit} recommended tracks successfully uploaded to {playlist.name}.")
+    print(f"{limit} recommended tracks successfully uploaded to Playlist, '{playlist.name}'.")
     
 
 main()
