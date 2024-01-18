@@ -8,7 +8,7 @@ I was inspired by [Valerio Velardo's YouTube tutorial](https://www.youtube.com/w
 
 ## Privacy
 
-Requires access to your Spotify ID, listening history (up to 50 songs), and permission to create playlists. You must confirm once running the program in order for the once time access to your profile.
+Requires access to your Spotify ID, listening history (up to 50 songs), current playlists, and permission to create playlists. You must confirm once running the program in order for the once time access to your profile.
 
 ## Dependencies
 
