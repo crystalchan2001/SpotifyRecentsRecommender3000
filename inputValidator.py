@@ -1,34 +1,64 @@
 class InputValidator:
 
-    def get_int(self, to_check):
+    def is_int(self, to_check):
         try:
             int(to_check)
         except:
-            self.get_int(input("Please enter numbers only!: "))
+            return False
         else:
-            return int(to_check)
+            return True
             
-    def get_int_list(self, to_check):
+    def is_int_list(self, to_check):
         try:
-            [eval(i) for i in to_check.strip().split()]
+            [eval(i) for i in to_check]
         except:
-            self.get_int_list(input("Please only enter numbers separated by a space: "))
+            return False
         else:
-            return list([eval(i) for i in to_check.strip().split()])
-            
-    def get_valid_int(self, to_check, lowBound, upBound):
-        num = self.get_int(to_check)
-        valid_range = num in range(lowBound, upBound+1)
-        while not valid_range:
-            num = self.get_int(input(f"Please choose from the valid range between {lowBound} and {upBound}: "))
-            valid_range = num in range(lowBound, upBound+1)
-        return num
+            return True
+    
+    def is_in_range(self, to_check, upBound):
+        return (int(to_check) > 0 and int(to_check) <= upBound)
+    
+    def get_valid_int(self, to_check, upBound):
+        invalid = True
+        result = None
 
-    # def get_valid_int_list(self, list_to_check, lowBound, upBound, limit):
-    #     if (len(list_to_check) < 1 or len(list_to_check) > limit):
-    #         self.get_valid_int_list(input(f"Please enter up to {limit} numbers: "))
-    #     all_nums = self.get_int_list(list_to_check)
- 
+        while invalid:
+            invalid_int = not self.is_int(to_check)
+            if invalid_int:
+                to_check = input("Please enter a number: ")
+                continue
+            invalid_range = not self.is_in_range(to_check, upBound)
+            if invalid_range:
+                to_check = input(f"Please enter a number between 1 and {upBound}: ")
+                continue
+            else: 
+                result = int(to_check)
+                invalid = False
+        
+        return result
+    
+    def get_valid_seeds(self, to_check, upBound):
+        invalid = True
+        indexes = []
+
+        while invalid:
+            indexes = to_check.strip().split()
+            invalid_int_list = not self.is_int_list(indexes)
+            if invalid_int_list:
+                to_check = input("Please enter numbers separated by spaces: ")
+                continue
+            invalid_list_length = len(indexes) < 1 or len(indexes) > 5
+            if invalid_list_length:
+                to_check = input("Please enter up to 5 indexes: ")
+                continue
+            invalid_seed_values = not all((int(idx) > 0 and int(idx) <= upBound) for idx in indexes)
+            if invalid_seed_values:
+                to_check = input(f"Please enter indexes between 1 and {upBound}: ")
+                continue  
+            else:
+                invalid = False      
+        return indexes
 
     def get_playlist_preference(self, to_check):
         invalid = True

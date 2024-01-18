@@ -14,8 +14,7 @@ def main():
     spotify_brain = SpotifyBrain()
     validator = InputValidator()
 
-    num_to_visualise = validator.get_valid_int(input("How many of your recently played tracks would you like to choose from? (Between 1 and 50): "), 1, 50)
-    # check the input is valid
+    num_to_visualise = validator.get_valid_int(input("How many of your recently played tracks would you like to choose from? (1 to 50): "), 50)
 
     print(f"Here are the last {num_to_visualise} tracks you listened to on Spotify:")
     last_played_tracks = spotify_brain.get_last_played_tracks(num_to_visualise)
@@ -23,37 +22,35 @@ def main():
         print(f"{index} -  {track}")
     
     # choosing tracks to use as a seed to generate a playlist
-    indexes = input("Enter the tracks you want to use as seeds by track id separated by a space (Enter between 1 and 5 indexes): ")
+    indexes = validator.get_valid_seeds(input("Enter the tracks you want to use as seeds by track id separated by a space (Up to 5 indexes): "), num_to_visualise)
 
     # check inputted seeds are valid
-    # validator.get_valid_int_list(num_seeds, 1, 5, range(1, num_to_visualise+1))
 
-    invalid_seeds = True
-    while invalid_seeds:
-        indexes_list = validator.get_int_list(indexes)
-        print("indexes list: ", indexes_list)
+    # invalid_seeds = True
+    # while invalid_seeds:
+    #     indexes_list = validator.get_int_list(indexes)
 
-        num_seeds = len(indexes_list)
-        print(num_seeds, f"[{indexes_list}]")
+    #     num_seeds = len(indexes_list)
+    #     # print(num_seeds, f"[{indexes_list}]")
 
-        invalid_num_seeds = (num_seeds <= 0 or num_seeds > 5)
-        invalid_seed_value = not all((idx > 0 and idx <= len(last_played_tracks)) for idx in indexes_list) 
+    #     invalid_num_seeds = (num_seeds <= 0 or num_seeds > 5)
+    #     invalid_seed_value = not all((idx > 0 and idx <= len(last_played_tracks)) for idx in indexes_list) 
 
-        if (invalid_num_seeds):
-            indexes = input("You have entered an invalid number of indexes! Please enter between 1 and 5 indexes to be used as seeds: ")
-            continue 
+    #     if (invalid_num_seeds):
+    #         indexes = input("You have entered an invalid number of indexes! Please enter between 1 and 5 indexes to be used as seeds: ")
+    #         continue 
 
-        elif (invalid_seed_value):
-            indexes = input(f"You have entered an invalid index! Please enter indexes between 1 and {num_to_visualise} (inclusive) from the list above: ")
-            continue
+    #     elif (invalid_seed_value):
+    #         indexes = input(f"You have entered an invalid index! Please enter indexes between 1 and {num_to_visualise} (inclusive) from the list above: ")
+    #         continue
         
-        elif (not invalid_num_seeds and not invalid_seed_value):
-            invalid_seeds = False
+    #     elif (not invalid_num_seeds and not invalid_seed_value):
+    #         invalid_seeds = False
 
-    seed_tracks = [last_played_tracks[int(index)-1] for index in indexes_list]
+    seed_tracks = [last_played_tracks[int(index)-1] for index in indexes]
 
     # choosing how many tracks they want recommended in the new playlist
-    limit = validator.get_valid_int(input("How many tracks would you like recommended? (Between 1 and 100): "), 1, 100)
+    limit = validator.get_valid_int(input("How many tracks would you like recommended? (Between 1 and 100): "), 100)
 
     # get recommended based off seed tracks
     print("Here are the recommended tracks: ")
@@ -77,7 +74,7 @@ def main():
             print(f"{index} -  {pl.name}")
 
         playlist_idx = validator.get_valid_int(
-            input("Please enter the index of the playlist you wish to add the recommended tracks to: "), 1, num_playlists)
+            input("Please enter the index of the playlist you wish to add the recommended tracks to: "), num_playlists)
 
         playlist = playlists[int(playlist_idx)-1]
 
