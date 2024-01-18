@@ -24,29 +24,6 @@ def main():
     # choosing tracks to use as a seed to generate a playlist
     indexes = validator.get_valid_seeds(input("Enter the tracks you want to use as seeds by track id separated by a space (Up to 5 indexes): "), num_to_visualise)
 
-    # check inputted seeds are valid
-
-    # invalid_seeds = True
-    # while invalid_seeds:
-    #     indexes_list = validator.get_int_list(indexes)
-
-    #     num_seeds = len(indexes_list)
-    #     # print(num_seeds, f"[{indexes_list}]")
-
-    #     invalid_num_seeds = (num_seeds <= 0 or num_seeds > 5)
-    #     invalid_seed_value = not all((idx > 0 and idx <= len(last_played_tracks)) for idx in indexes_list) 
-
-    #     if (invalid_num_seeds):
-    #         indexes = input("You have entered an invalid number of indexes! Please enter between 1 and 5 indexes to be used as seeds: ")
-    #         continue 
-
-    #     elif (invalid_seed_value):
-    #         indexes = input(f"You have entered an invalid index! Please enter indexes between 1 and {num_to_visualise} (inclusive) from the list above: ")
-    #         continue
-        
-    #     elif (not invalid_num_seeds and not invalid_seed_value):
-    #         invalid_seeds = False
-
     seed_tracks = [last_played_tracks[int(index)-1] for index in indexes]
 
     # choosing how many tracks they want recommended in the new playlist
