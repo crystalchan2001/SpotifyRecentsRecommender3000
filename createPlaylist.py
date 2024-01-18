@@ -14,7 +14,7 @@ def main():
     spotify_brain = SpotifyBrain()
     validator = InputValidator()
 
-    num_to_visualise = validator.get_valid_int(input("How many of your recently played tracks would you like to choose from? (1 to 50): "), 50)
+    num_to_visualise = validator.get_valid_int(input("How many of your recently played tracks would you like to choose from? [1-50]: "), 50)
 
     print(f"Here are the last {num_to_visualise} tracks you listened to on Spotify:")
     last_played_tracks = spotify_brain.get_last_played_tracks(num_to_visualise)
@@ -22,12 +22,12 @@ def main():
         print(f"{index} -  {track}")
     
     # choosing tracks to use as a seed to generate a playlist
-    indexes = validator.get_valid_seeds(input("Enter the tracks you want to use as seeds by track id separated by a space (Up to 5 indexes): "), num_to_visualise)
+    indexes = validator.get_valid_seeds(input(f"Enter up to 5 indexes [1-{num_to_visualise}] of tracks to use as seeds, separated by a space: "), num_to_visualise)
 
     seed_tracks = [last_played_tracks[int(index)-1] for index in indexes]
 
     # choosing how many tracks they want recommended in the new playlist
-    limit = validator.get_valid_int(input("How many tracks would you like recommended? (Between 1 and 100): "), 100)
+    limit = validator.get_valid_int(input("How many tracks would you like recommended? [1-100]: "), 100)
 
     # get recommended based off seed tracks
     print("Here are the recommended tracks: ")
