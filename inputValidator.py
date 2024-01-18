@@ -10,7 +10,7 @@ class InputValidator:
             
     def is_int_list(self, to_check):
         try:
-            [eval(i) for i in to_check]
+            [int(i) for i in to_check]
         except:
             return False
         else:
@@ -57,7 +57,8 @@ class InputValidator:
                 to_check = input(f"Please enter indexes between 1 and {upBound}: ")
                 continue  
             else:
-                invalid = False      
+                invalid = False     
+
         return indexes
 
     def get_playlist_preference(self, to_check):
