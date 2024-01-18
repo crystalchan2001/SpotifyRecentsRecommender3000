@@ -52,7 +52,7 @@ class InputValidator:
             if invalid_list_length:
                 to_check = input("Please enter up to 5 indexes: ")
                 continue
-            invalid_seed_values = not all((int(idx) > 0 and int(idx) <= upBound) for idx in indexes)
+            invalid_seed_values = not all(self.is_in_range(int(idx), upBound) for idx in indexes)
             if invalid_seed_values:
                 to_check = input(f"Please enter indexes between 1 and {upBound}: ")
                 continue  
